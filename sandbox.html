@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Sandbox</title>
+</head>
+<body>
+<script>
+// Declared in manifest.sandbox.pages: runs in a null origin with a permissive
+// CSP that allows eval. That's the whole point — MV3's extension_pages CSP
+// forbids eval, so arbitrary user JS can't run on launcher.html directly.
+// We receive the code via postMessage from the launcher and eval it here.
+window.addEventListener('message', e => {
+  if (!e.data || e.data.type !== 'exec') return;
+  try {
+    // Indirect eval runs in global scope, matching bookmarklet semantics.
+    (0, eval)(e.data.code);
+  } catch (err) {
+    // eslint-disable-next-line no-console
+    console.error('Bookmarklet threw:', err);
+  }
+  // Let async work (fetch, etc.) actually dispatch before we signal done.
+  setTimeout(() => {
+    if (e.source) e.source.postMessage({ type: 'sandbox-done' }, '*');
+  }, 250);
+});
+</script>
+</body>
+</html>

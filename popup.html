@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bookmark Icon Customizer</title>
+  <link rel="stylesheet" href="popup.css">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+<body class="dark-theme">
+  <div class="app-container">
+    <!-- Header -->
+    <header>
+      <div class="logo-area">
+        <h1>Bookmark <span class="accent">Icon Customizer</span></h1>
+      </div>
+      <div class="search-box">
+        <input type="text" id="bookmark-search" placeholder="Search your bookmarks..." autocomplete="off">
+        <span class="search-icon">🔍</span>
+      </div>
+    </header>
+
+    <!-- Navigation / Breadcrumbs -->
+    <nav class="breadcrumb-nav">
+      <ul id="breadcrumb-list">
+        <li data-folder-id="0">Root</li>
+      </ul>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main>
+      <div class="view-switcher">
+        <button id="btn-view-bar" class="active">Bookmark Bar</button>
+        <button id="btn-view-all">All Bookmarks</button>
+        <button id="btn-view-customized">Customized Only</button>
+      </div>
+
+      <div id="content-scroll-area">
+        <div id="bookmark-list" class="bookmark-grid">
+          <div class="loading">Loading bookmarks...</div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Modal / Picker Panel (Overlay) -->
+    <div id="picker-modal" class="modal hidden">
+      <div class="modal-backdrop"></div>
+      <div class="modal-content glass">
+        <header class="modal-header">
+          <div class="modal-title-row">
+            <h2>Customize Icon</h2>
+            <button class="close-btn" id="close-picker" aria-label="Close">&times;</button>
+          </div>
+          <div class="selected-target">
+            <img id="target-current-icon" src="icons/icon48.png" alt="" onerror="this.src='icons/icon48.png'">
+            <span id="target-title">Bookmark Name</span>
+          </div>
+          <p class="apply-hint hidden" id="apply-hint"></p>
+          <div class="webhook-row hidden" id="webhook-row">
+            <label class="webhook-label">
+              <input type="checkbox" id="webhook-toggle">
+              <span>This is a webhook</span>
+            </label>
+            <span class="webhook-help" tabindex="0" aria-label="What is a webhook?">?<span class="webhook-tooltip">A webhook is a URL that triggers an action when called (e.g. opens a gate, toggles a light, posts a message). Clicking it normally navigates the browser and may try to download the response. Tick this to fire the request silently in the background instead — the bookmark will carry your custom icon and won't open a new tab. Example: Home Assistant URLs like <code>https://yourhome/api/webhook/abc123</code>.</span></span>
+          </div>
+          <div class="tabs" role="tablist">
+            <button class="tab-btn active" data-tab="emoji" role="tab">Emoji</button>
+            <button class="tab-btn" data-tab="mdi" role="tab">MDI</button>
+            <button class="tab-btn" data-tab="upload" role="tab">Upload</button>
+            <button class="tab-btn" data-tab="libraries" role="tab">Links</button>
+          </div>
+        </header>
+
+        <div class="modal-body">
+          <div id="panel-emoji" class="tab-panel active">
+            <div class="emoji-search">
+              <input type="text" id="emoji-search-input" placeholder="Search emojis...">
+            </div>
+            <div id="emoji-grid" class="emoji-grid"></div>
+          </div>
+
+          <div id="panel-mdi" class="tab-panel">
+            <div class="emoji-search">
+              <input type="text" id="mdi-search-input" placeholder="Search mdi:home...">
+            </div>
+            <div id="mdi-grid" class="emoji-grid mdi-grid-custom"></div>
+          </div>
+
+          <div id="panel-upload" class="tab-panel">
+            <div class="upload-zone" id="drop-zone">
+              <p>Drag & drop icon here or</p>
+              <input type="file" id="file-input" accept="image/*" hidden>
+              <button class="btn-primary" id="btn-browse" type="button">Browse Files</button>
+            </div>
+          </div>
+
+          <div id="panel-libraries" class="tab-panel">
+            <p class="panel-intro">Need inspiration?</p>
+            <ul class="library-links">
+              <li><a href="https://icons8.com/" target="_blank">Icons8</a></li>
+              <li><a href="https://feathericons.com/" target="_blank">Feather</a></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="modal-actions">
+          <div class="action-preview">
+            <div id="selected-icon-preview">
+              <span class="preview-hint">Pick an icon</span>
+            </div>
+            <span class="action-preview-label">Preview</span>
+          </div>
+          <div class="action-buttons">
+            <button id="btn-restore" class="btn-secondary hidden">Restore Original</button>
+            <button id="confirm-btn" class="btn-primary" disabled>Apply Icon</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+      <span id="storage-status">Checking storage...</span>
+      <span class="version">v1.0.0</span>
+    </footer>
+  </div>
+
+  <script src="popup.js" type="module"></script>
+</body>
+</html>
